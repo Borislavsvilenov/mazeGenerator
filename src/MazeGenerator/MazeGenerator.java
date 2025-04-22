@@ -1,13 +1,11 @@
 package MazeGenerator;
 
-import Vector.Box2;
 import Vector.Vector2;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Stack;
 
@@ -23,7 +21,6 @@ public class MazeGenerator extends JPanel implements KeyListener, ActionListener
     Stack<Tile> path;
 
     Vector2 MazeBuilder;
-    int lastMove;
 
     final Timer clock;
     final Random rand;
@@ -108,18 +105,23 @@ public class MazeGenerator extends JPanel implements KeyListener, ActionListener
             MazeBuilder = AvailableMoves.get(direction).pos.clone();
             path.push(grid.get(currentTileIndex));
 
-            if (directions.get(direction).equals("north")) {
-                grid.get(currentTileIndex).northWall = false;
-                grid.get(currentTileIndex - GridWidth).southWall = false;
-            } else if (directions.get(direction).equals("south")) {
-                grid.get(currentTileIndex).southWall = false;
-                grid.get(currentTileIndex + GridWidth).northWall = false;
-            } else if (directions.get(direction).equals("east")) {
-                grid.get(currentTileIndex).eastWall = false;
-                grid.get(currentTileIndex + 1).westWall = false;
-            } else if (directions.get(direction).equals("west")) {
-                grid.get(currentTileIndex).westWall = false;
-                grid.get(currentTileIndex - 1).eastWall = false;
+            switch (directions.get(direction)) {
+                case "north" -> {
+                    grid.get(currentTileIndex).northWall = false;
+                    grid.get(currentTileIndex - GridWidth).southWall = false;
+                }
+                case "south" -> {
+                    grid.get(currentTileIndex).southWall = false;
+                    grid.get(currentTileIndex + GridWidth).northWall = false;
+                }
+                case "east" -> {
+                    grid.get(currentTileIndex).eastWall = false;
+                    grid.get(currentTileIndex + 1).westWall = false;
+                }
+                case "west" -> {
+                    grid.get(currentTileIndex).westWall = false;
+                    grid.get(currentTileIndex - 1).eastWall = false;
+                }
             }
 
         } else if (!path.isEmpty()) {
