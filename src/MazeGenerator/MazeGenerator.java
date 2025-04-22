@@ -21,6 +21,8 @@ public class MazeGenerator extends JPanel implements KeyListener, ActionListener
     Stack<Tile> path;
 
     Vector2 MazeBuilder;
+    Vector2 MaxTile;
+    int MaxDistance;
 
     final Timer clock;
     final Random rand;
@@ -35,7 +37,7 @@ public class MazeGenerator extends JPanel implements KeyListener, ActionListener
         GridWidth = WIDTH/SIZE;
         GridHeight = HEIGHT/SIZE;
 
-        clock = new Timer(16, this);
+        clock = new Timer(5, this);
         rand = new Random();
 
         grid = new ArrayList<>();
@@ -109,20 +111,38 @@ public class MazeGenerator extends JPanel implements KeyListener, ActionListener
                 case "north" -> {
                     grid.get(currentTileIndex).northWall = false;
                     grid.get(currentTileIndex - GridWidth).southWall = false;
+                    if (path.size() > MaxDistance) {
+                        MaxDistance = path.size();
+                        MaxTile = grid.get(currentTileIndex - GridWidth).pos;
+                    }
                 }
                 case "south" -> {
                     grid.get(currentTileIndex).southWall = false;
                     grid.get(currentTileIndex + GridWidth).northWall = false;
+                    if (path.size() > MaxDistance) {
+                        MaxDistance = path.size();
+                        MaxTile = grid.get(currentTileIndex + GridWidth).pos;
+                    }
                 }
                 case "east" -> {
                     grid.get(currentTileIndex).eastWall = false;
                     grid.get(currentTileIndex + 1).westWall = false;
+                    if (path.size() > MaxDistance) {
+                        MaxDistance = path.size();
+                        MaxTile = grid.get(currentTileIndex + 1).pos;
+                    }
                 }
                 case "west" -> {
                     grid.get(currentTileIndex).westWall = false;
                     grid.get(currentTileIndex - 1).eastWall = false;
+                    if (path.size() > MaxDistance) {
+                        MaxDistance = path.size();
+                        MaxTile = grid.get(currentTileIndex - 1).pos;
+                    }
                 }
             }
+
+
 
         } else if (!path.isEmpty()) {
             MazeBuilder = path.pop().pos.clone();
@@ -133,17 +153,21 @@ public class MazeGenerator extends JPanel implements KeyListener, ActionListener
     }
 
     public void draw(Graphics2D g) {
+        g.setStroke(new BasicStroke(1));
         for(Tile tile : grid) {
             if (tile.touched()) {
                 // draw path
                 g.setColor(Color.darkGray);
-                g.setStroke(new BasicStroke(1));
                 g.fillRect((int) tile.pos.x * SIZE, (int) tile.pos.y * SIZE, SIZE, SIZE);
 
+                // draw Furthest Tile
+                g.setColor(Color.red);
+                g.fillRect((int)MaxTile.x * SIZE, (int)MaxTile.y * SIZE, SIZE, SIZE);
+
                 // draw MazeBuilder
-                g.setStroke(new BasicStroke(1));
                 g.setColor(Color.lightGray);
                 g.fillRect((int)MazeBuilder.x * SIZE, (int)MazeBuilder.y * SIZE, SIZE, SIZE);
+
             }
 
             // draw Grid

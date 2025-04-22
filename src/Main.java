@@ -5,7 +5,7 @@ import javax.swing.*;
 public static void main() {
     int Width = 800;
     int Height = 800;
-    int TileSIze = 25;
+    int TileSIze = 10;
 
     JFrame frame = new JFrame("MazeGenerator");
     frame.setSize(Width, Height);
